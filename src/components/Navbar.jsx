@@ -66,7 +66,7 @@ export default function Navbar({ resumeUrl }) {
               <Linkedin size={20} />
             </a>
             <a
-              href="https://leetcode.com/u/dharmeshgupta/"
+              href="https://leetcode.com/u/dharmeshsgupta/"
               target="_blank"
               rel="noreferrer"
               className="text-white/70 hover:text-[#ffa116] hover:drop-shadow-[0_0_8px_rgba(255,161,22,0.8)] transition-all"
