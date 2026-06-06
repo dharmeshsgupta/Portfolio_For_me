@@ -17,7 +17,7 @@ export default function Experience() {
     <section id="experience" className="py-24 px-6 max-w-[1400px] mx-auto relative z-20">
       <div className="flex items-center gap-4 mb-16">
         <Briefcase className="text-amber-500" size={36} />
-        <h2 className="text-4xl font-bold font-mono text-white text-glow-amber tracking-widest uppercase">_EXPERIENCE</h2>
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-mono text-white text-glow-amber tracking-widest uppercase truncate w-full sm:overflow-visible">_EXPERIENCE</h2>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
@@ -87,8 +87,8 @@ export default function Experience() {
         </div>
 
         {/* Right Side: Spline 3D Scene */}
-        <div className="hidden lg:flex relative pointer-events-auto w-full items-center justify-center">
-          <div className="absolute inset-0 w-full h-full mix-blend-screen" style={{ transform: 'scale(0.95) translateX(8%)' }}>
+        <div className="flex relative pointer-events-auto w-full h-[280px] lg:h-auto items-center justify-center mt-4 lg:mt-0 rounded-2xl lg:rounded-none border border-white/10 lg:border-none bg-black/20 lg:bg-transparent overflow-hidden lg:overflow-visible shadow-lg lg:shadow-none">
+          <div className="absolute inset-0 w-full h-full mix-blend-screen lg:mix-blend-screen" style={{ transform: 'scale(0.95) translateX(8%)' }}>
             <SplineScene 
               scene="https://prod.spline.design/6PqZ39NqAFy9b0Lj/scene.splinecode" 
               className="w-full h-full"

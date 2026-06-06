@@ -1,20 +1,29 @@
 import React from 'react';
 import { Terminal, Code2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { SplineScene } from './ui/SplineScene';
 
 export default function About() {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
   return (
     <section id="about" className="py-24 px-6 max-w-[1400px] mx-auto relative z-20">
       <div className="flex items-center gap-4 mb-16">
         <Terminal className="text-amber-500" size={36} />
-        <h2 className="text-4xl font-bold font-mono text-white text-glow-amber tracking-widest uppercase">_ABOUT_ME</h2>
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-mono text-white text-glow-amber tracking-widest uppercase truncate w-full sm:overflow-visible">_ABOUT_ME</h2>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
         
         {/* Left Side: Content */}
         <div className="flex flex-col gap-8 justify-center">
-          <div className="glass-card p-10 border-white/5 hover:border-amber-500/30 transition-all duration-500 noise-overlay">
+          <motion.div 
+            initial={isMobile ? { opacity: 0, y: 30 } : false}
+            whileInView={isMobile ? { opacity: 1, y: 0 } : undefined}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5 }}
+            className="glass-card p-10 border-white/5 hover:border-amber-500/30 transition-all duration-500 noise-overlay"
+          >
             <h3 className="text-2xl font-bold text-cyber-teal mb-6 font-mono text-glow-teal">&gt; system.profile.init()</h3>
             <p className="text-white/80 leading-relaxed mb-6 font-sans text-lg">
               I am a <strong className="text-white">Python Backend Engineer</strong> and <strong className="text-white">AI Infrastructure Enthusiast</strong> currently pursuing my B.E. in Computer Engineering. I specialize in architecting highly scalable backend systems and integrating complex Large Language Models (LLMs) to build intelligent Generative AI workflows.
@@ -33,9 +42,15 @@ export default function About() {
                 <p className="text-white/80">Global / Remote</p>
               </div>
             </div>
-          </div>
+          </motion.div>
           
-          <div className="glass-card p-10 border-white/5 hover:border-cyber-teal/30 transition-all duration-500 noise-overlay">
+          <motion.div 
+            initial={isMobile ? { opacity: 0, y: 30 } : false}
+            whileInView={isMobile ? { opacity: 1, y: 0 } : undefined}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5, delay: isMobile ? 0.2 : 0 }}
+            className="glass-card p-10 border-white/5 hover:border-cyber-teal/30 transition-all duration-500 noise-overlay"
+          >
             <div className="flex items-center gap-3 mb-8">
               <Code2 className="text-cyber-teal" size={24} />
               <h3 className="text-xl font-bold text-white font-mono">&gt; root.tech_stack[]</h3>
@@ -50,11 +65,11 @@ export default function About() {
                 </span>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Right Side: Spline 3D Scene */}
-        <div className="hidden lg:flex relative pointer-events-auto w-full items-center justify-center">
+        <div className="flex relative pointer-events-auto w-full h-[280px] lg:h-auto items-center justify-center mt-4 lg:mt-0 rounded-2xl lg:rounded-none border border-white/10 lg:border-none bg-black/20 lg:bg-transparent overflow-hidden lg:overflow-visible shadow-lg lg:shadow-none">
           {/* Use transform to center the off-center camera and scale slightly to fit hands */}
           <div className="absolute inset-0 w-full h-full" style={{ transform: 'scale(0.95) translateX(8%)' }}>
             <SplineScene 

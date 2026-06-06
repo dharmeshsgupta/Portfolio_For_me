@@ -16,25 +16,30 @@ export default function Hero({ linkedinFollowers, resumeUrl }) {
   const currentFrame = useRef(0);
 
   useEffect(() => {
-    // Preload all frames
+    const isMobile = window.innerWidth < 768;
+    const frameStep = isMobile ? 3 : 1; // Load fewer frames on mobile to prevent memory crash
+    const framesToLoad = Math.ceil(TOTAL_FRAMES / frameStep);
     let loadedCount = 0;
-    for (let i = 1; i <= TOTAL_FRAMES; i++) {
+    let handleResize = null;
+
+    // Preload frames based on device
+    for (let i = 1; i <= TOTAL_FRAMES; i += frameStep) {
       const img = new Image();
       img.src = `/frames/ezgif-frame-${String(i).padStart(3, '0')}.jpg`;
       img.onload = () => {
         loadedCount++;
-        setLoaded(Math.floor((loadedCount / TOTAL_FRAMES) * 100));
-        if (loadedCount === TOTAL_FRAMES) {
+        setLoaded(Math.floor((loadedCount / framesToLoad) * 100));
+        if (loadedCount === framesToLoad) {
           initAnimation();
         }
       };
       img.onerror = () => {
         loadedCount++;
-        if (loadedCount === TOTAL_FRAMES) {
+        if (loadedCount === framesToLoad) {
           initAnimation();
         }
       }
-      images.current.push(img);
+      images.current[i] = img;
     }
 
     const initAnimation = () => {
@@ -42,17 +47,16 @@ export default function Hero({ linkedinFollowers, resumeUrl }) {
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
 
-      const setCanvasSize = () => {
-        const dpr = window.devicePixelRatio || 1;
-        canvas.width = window.innerWidth * dpr;
-        canvas.height = window.innerHeight * dpr;
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-        draw(currentFrame.current);
-      };
-
       const draw = (index) => {
-        const img = images.current[index];
+        let frameToDraw = index + 1;
+        if (isMobile) {
+          frameToDraw = Math.floor(index / frameStep) * frameStep + 1;
+        }
+        if (frameToDraw > TOTAL_FRAMES) {
+          frameToDraw = TOTAL_FRAMES - (TOTAL_FRAMES % frameStep) + 1;
+        }
+
+        const img = images.current[frameToDraw];
         if (!img || !img.complete) return;
         currentFrame.current = index;
         const cw = canvas.width;
@@ -77,8 +81,18 @@ export default function Hero({ linkedinFollowers, resumeUrl }) {
         ctx.drawImage(img, dx, dy, dw, dh);
       };
 
-      setCanvasSize();
-      window.addEventListener('resize', setCanvasSize);
+      handleResize = () => {
+        const isMobile = window.innerWidth < 768;
+        const dpr = isMobile ? 1 : (window.devicePixelRatio || 1);
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = window.innerHeight * dpr;
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = isMobile ? 'low' : 'high';
+        draw(currentFrame.current);
+      };
+
+      handleResize();
+      window.addEventListener('resize', handleResize);
 
       const obj = { frame: 0 };
       
@@ -86,7 +100,7 @@ export default function Hero({ linkedinFollowers, resumeUrl }) {
         trigger: containerRef.current,
         start: 'top top',
         end: 'bottom bottom',
-        scrub: 1,
+        scrub: isMobile ? 0.5 : 1,
         animation: gsap.to(obj, {
           frame: TOTAL_FRAMES - 1,
           snap: 'frame',
@@ -96,20 +110,38 @@ export default function Hero({ linkedinFollowers, resumeUrl }) {
       });
 
       // Text reveal animation with flicker effect
+      const isMobileSize = window.innerWidth < 768;
+      
       gsap.fromTo(textRef.current, 
-        { opacity: 0, x: -30 }, 
-        { opacity: 1, x: 0, duration: 1.2, delay: 0.5, ease: "power2.out" }
+        { 
+          opacity: 0, 
+          x: isMobileSize ? 0 : -30, 
+          y: isMobileSize ? 40 : 0,
+          scale: isMobileSize ? 0.95 : 1
+        }, 
+        { 
+          opacity: 1, 
+          x: 0, 
+          y: 0, 
+          scale: 1,
+          duration: 1.2, 
+          delay: 0.5, 
+          ease: "power3.out" 
+        }
       );
     };
 
     return () => {
-      window.removeEventListener('resize', () => {});
+      if (handleResize) {
+        window.removeEventListener('resize', handleResize);
+      }
       ScrollTrigger.getAll().forEach(t => t.kill());
+      images.current = [];
     };
   }, []);
 
   return (
-    <div ref={containerRef} className="relative h-[400vh] w-full bg-dark-900 noise-overlay">
+    <div ref={containerRef} className="relative h-[300vh] md:h-[400vh] w-full bg-dark-900 noise-overlay">
       {/* Z-0: Fixed Canvas Background with CRT vignette */}
       <div className="sticky top-0 left-0 w-full h-screen overflow-hidden z-0 vignette">
         {loaded < 100 && (
@@ -122,23 +154,23 @@ export default function Hero({ linkedinFollowers, resumeUrl }) {
         <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-transparent to-dark-900/95 pointer-events-none" />
         
         {/* Z-20: Text Terminal */}
-        <div className="absolute inset-0 flex items-center justify-end max-w-[1400px] mx-auto px-6 pt-24 pb-20">
+        <div className="absolute inset-0 flex items-center justify-center lg:justify-end max-w-[1400px] mx-auto px-4 sm:px-6 pt-20 pb-16 lg:pt-24 lg:pb-20">
             <div className="z-20 flex flex-col justify-center h-full pointer-events-auto max-w-2xl w-full">
-              <div ref={textRef} className="bg-white/5 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5)] p-8 md:p-10 rounded-2xl opacity-0 relative noise-overlay">
-                <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
-                  <div className="flex items-center gap-3">
-                    <Terminal className="text-amber-500 animate-pulse" size={28} />
-                    <h1 className="text-amber-500 font-mono text-xl font-bold tracking-widest text-glow-amber">
+              <div ref={textRef} className="bg-white/5 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5)] p-5 md:p-10 rounded-2xl opacity-0 relative noise-overlay">
+                <div className="flex items-center justify-between mb-6 md:mb-8 border-b border-white/10 pb-4">
+                  <div className="flex items-center gap-2 md:gap-3">
+                    <Terminal className="text-amber-500 animate-pulse w-6 h-6 md:w-7 md:h-7" />
+                    <h1 className="text-amber-500 font-mono text-lg md:text-xl font-bold tracking-widest text-glow-amber">
                       DS-GUPTA v3.5
                     </h1>
                   </div>
-                  <div className="w-3 h-3 bg-cyber-teal rounded-full animate-pulse shadow-[0_0_10px_#00f0ff]"></div>
+                  <div className="w-2.5 h-2.5 md:w-3 md:h-3 bg-cyber-teal rounded-full animate-pulse shadow-[0_0_10px_#00f0ff]"></div>
                 </div>
                 
-                <div className="font-mono text-white/90 space-y-5 text-sm md:text-base leading-relaxed">
-                  <p className="flex justify-between border-b border-white/10 pb-2">
+                <div className="font-mono text-white/90 space-y-4 md:space-y-5 text-xs sm:text-sm md:text-base leading-relaxed">
+                  <p className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 border-b border-white/10 pb-2">
                     <span className="text-white/50 tracking-wider">IDENTITY:</span> 
-                    <span className="text-white font-bold">Dharmesh Gupta</span>
+                    <span className="text-white font-bold sm:text-right">Dharmesh Gupta</span>
                   </p>
                   <p className="flex flex-col gap-1 border-b border-white/10 pb-2">
                     <span className="text-white/50 tracking-wider">ROLE:</span> 
@@ -146,19 +178,19 @@ export default function Hero({ linkedinFollowers, resumeUrl }) {
                   </p>
                   <p className="flex flex-col gap-1 border-b border-white/10 pb-2">
                     <span className="text-white/50 tracking-wider">STACK:</span> 
-                    <span className="text-amber-400">Python, Django, FastAPI, PostgreSQL, Docker, RESTful APIs, LangChain, LangGraph, AWS</span>
+                    <span className="text-amber-400 leading-snug">Python, Django, FastAPI, PostgreSQL, Docker, RESTful APIs, LangChain, LangGraph, AWS</span>
                   </p>
-                  <p className="flex justify-between border-b border-white/10 pb-2">
+                  <p className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 border-b border-white/10 pb-2">
                     <span className="text-white/50 tracking-wider">NETWORK:</span> 
-                    <span>{linkedinFollowers} Connections</span>
+                    <span className="sm:text-right">{linkedinFollowers} Connections</span>
                   </p>
-                  <p className="flex justify-between">
+                  <p className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
                     <span className="text-white/50 tracking-wider">SYSTEM:</span> 
-                    <span>~$ Awaiting Command_</span>
+                    <span className="sm:text-right">~$ Awaiting Command_</span>
                   </p>
                   
-                  <div className="pt-6 mt-4 flex items-center justify-between">
-                    <div>
+                  <div className="pt-4 md:pt-6 mt-2 md:mt-4 flex items-center justify-between gap-4">
+                    <div className="hidden sm:block">
                       <p className="text-white/50 mb-2 font-sans tracking-widest uppercase text-xs">Execute Sequence</p>
                       <div className="h-1 w-24 bg-gradient-to-r from-amber-500 to-transparent rounded"></div>
                     </div>
@@ -172,9 +204,9 @@ export default function Hero({ linkedinFollowers, resumeUrl }) {
                         }
                       }}
                       download={!!resumeUrl}
-                      className="px-6 py-2.5 bg-cyber-teal/10 border border-cyber-teal/50 text-cyber-teal font-mono text-sm hover:bg-cyber-teal hover:text-dark-900 transition-all shadow-[0_0_15px_rgba(0,240,255,0.15)] rounded flex items-center gap-2 group cursor-pointer"
+                      className="px-4 py-2 md:px-6 md:py-2.5 w-full sm:w-auto justify-center bg-cyber-teal/10 border border-cyber-teal/50 text-cyber-teal font-mono text-sm hover:bg-cyber-teal hover:text-dark-900 transition-all shadow-[0_0_15px_rgba(0,240,255,0.15)] rounded flex items-center gap-2 group cursor-pointer"
                     >
-                      <svg className="w-4.5 h-4.5 transform group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <svg className="w-4 h-4 md:w-4.5 md:h-4.5 transform group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                       </svg>
                       Download CV

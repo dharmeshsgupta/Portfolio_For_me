@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, Send, Github, Linkedin, Terminal } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { QuantumTransmission } from './ui/QuantumTransmission';
 
 export default function Contact() {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   const [linkedinFollowers, setLinkedinFollowers] = useState("12,300+");
   
   // Form states
@@ -108,7 +110,7 @@ export default function Contact() {
     <section id="contact" className="py-24 px-6 max-w-[1400px] mx-auto relative z-20">
       <div className="flex items-center gap-4 mb-16">
         <Terminal className="text-amber-500" size={36} />
-        <h2 className="text-4xl font-bold font-mono text-white text-glow-amber tracking-widest uppercase">_INITIATE_CONTACT</h2>
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-mono text-white text-glow-amber tracking-widest uppercase truncate w-full sm:overflow-visible">_INITIATE_CONTACT</h2>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
@@ -116,7 +118,13 @@ export default function Contact() {
         {/* Left Side: Content */}
         <div className="flex flex-col gap-8 h-full">
           {/* Contact Info */}
-          <div className="glass-card p-10 border-white/5 noise-overlay">
+          <motion.div 
+            initial={isMobile ? { opacity: 0, y: 30 } : false}
+            whileInView={isMobile ? { opacity: 1, y: 0 } : undefined}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5 }}
+            className="glass-card p-10 border-white/5 noise-overlay"
+          >
             <h3 className="text-2xl font-bold text-white mb-8">System Communications</h3>
             <div className="space-y-8">
               <a href="mailto:dharmeshgupta.r@gmail.com" className="flex items-center gap-6 group">
@@ -149,10 +157,16 @@ export default function Contact() {
                 </div>
               </a>
             </div>
-          </div>
+          </motion.div>
 
           {/* Form Container */}
-          <div className={`glass-panel p-10 rounded-2xl border-t-4 transition-all duration-500 ${borderAccentClass} shadow-2xl relative overflow-hidden noise-overlay flex-grow`}>
+          <motion.div 
+            initial={isMobile ? { opacity: 0, y: 30 } : false}
+            whileInView={isMobile ? { opacity: 1, y: 0 } : undefined}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5, delay: isMobile ? 0.2 : 0 }}
+            className={`glass-panel p-10 rounded-2xl border-t-4 transition-all duration-500 ${borderAccentClass} shadow-2xl relative overflow-hidden noise-overlay flex-grow`}
+          >
             {/* Decorative corner accents */}
             <div className={`absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 transition-all duration-500 ${isHire ? 'border-amber-500/50' : 'border-cyber-teal/50'}`}></div>
             <div className={`absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 transition-all duration-500 ${isHire ? 'border-amber-500/50' : 'border-cyber-teal/50'}`}></div>
@@ -319,11 +333,11 @@ export default function Contact() {
                 </button>
               </div>
             </form>
-          </div>
+          </motion.div>
         </div>
 
         {/* Right Side: Quantum Transmission 3D Canvas */}
-        <div className="hidden lg:flex relative pointer-events-auto w-full items-center justify-center">
+        <div className="flex relative pointer-events-auto w-full h-[280px] lg:h-auto items-center justify-center mt-4 lg:mt-0 rounded-2xl lg:rounded-none border border-white/10 lg:border-none bg-black/20 lg:bg-transparent overflow-hidden lg:overflow-visible shadow-lg lg:shadow-none">
           <div className="absolute inset-0 w-full h-full">
             <QuantumTransmission />
           </div>

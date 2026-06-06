@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Code, ExternalLink, Github, Film, X } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { QuantumAttractor } from './ui/QuantumAttractor';
 
 export default function Projects() {
   const [projects, setProjects] = useState([]);
   const [activeVideo, setActiveVideo] = useState(null);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   useEffect(() => {
     fetch("https://guptadharmesh.pythonanywhere.com/api/projects/")
@@ -35,13 +37,13 @@ export default function Projects() {
     <section id="projects" className="py-24 px-6 max-w-[1400px] mx-auto relative z-20">
       <div className="flex items-center gap-4 mb-16">
         <Code className="text-amber-500" size={36} />
-        <h2 className="text-4xl font-bold font-mono text-white text-glow-amber tracking-widest uppercase">_PUBLISHED_PROJECTS</h2>
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-mono text-white text-glow-amber tracking-widest uppercase truncate w-full sm:overflow-visible">_PUBLISHED_PROJECTS</h2>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
         
         {/* Left Side: Quantum Attractor 3D Canvas */}
-        <div className="hidden lg:flex relative pointer-events-auto w-full items-center justify-center">
+        <div className="flex relative pointer-events-auto w-full h-[280px] lg:h-auto items-center justify-center mb-4 lg:mb-0 rounded-2xl lg:rounded-none border border-white/10 lg:border-none bg-black/20 lg:bg-transparent overflow-hidden lg:overflow-visible shadow-lg lg:shadow-none">
           <div className="absolute inset-0 w-full h-full" style={{ transform: 'scale(0.95) translateX(8%)' }}>
             <QuantumAttractor />
           </div>
@@ -50,8 +52,15 @@ export default function Projects() {
         {/* Right Side: Content */}
         <div className="flex flex-col gap-10 justify-between">
           <div className="flex flex-col gap-10">
-            {projects.slice(0, 2).map((proj) => (
-              <div key={proj.id} className="glass-card group p-1 flex flex-col h-full border-white/5 hover:border-amber-500/40 transition-all duration-500 noise-overlay">
+            {projects.slice(0, 2).map((proj, idx) => (
+              <motion.div 
+                key={proj.id} 
+                initial={isMobile ? { opacity: 0, y: 30 } : false}
+                whileInView={isMobile ? { opacity: 1, y: 0 } : undefined}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: isMobile ? idx * 0.2 : 0 }}
+                className="glass-card group p-1 flex flex-col h-full border-white/5 hover:border-amber-500/40 transition-all duration-500 noise-overlay"
+              >
                 <div className="bg-dark-900/40 p-8 rounded-[14px] h-full flex flex-col backdrop-blur-md justify-between min-h-[300px]">
                   <div>
                     <div className="flex justify-between items-start mb-6">
@@ -95,7 +104,7 @@ export default function Projects() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
 

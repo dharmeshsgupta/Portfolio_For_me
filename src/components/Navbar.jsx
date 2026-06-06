@@ -23,7 +23,7 @@ export default function Navbar({ resumeUrl }) {
   }, []);
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'backdrop-blur-md bg-black/10 py-4' : 'bg-transparent py-6'}`}>
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-md border-b border-white/5 ${isScrolled ? 'bg-dark-900/60 py-3 md:py-4 shadow-lg shadow-black/20' : 'bg-dark-900/20 py-4 md:py-6'}`}>
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         {/* Logo */}
         <div className="flex items-center gap-2 group cursor-pointer">
@@ -124,15 +124,21 @@ export default function Navbar({ resumeUrl }) {
 
         {/* Mobile Toggle */}
         <div className="md:hidden">
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-white">
-            {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
+            className="flex items-center gap-2 px-3 py-2 bg-white/5 border border-white/10 rounded text-white hover:bg-white/10 transition-colors"
+          >
+            <span className="font-mono text-xs font-bold tracking-widest uppercase text-amber-500">
+              {mobileMenuOpen ? 'CLOSE' : 'MENU'}
+            </span>
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full glass-panel border-t-0 flex flex-col py-6 px-6 space-y-4">
+        <div className="md:hidden absolute top-full left-0 w-full bg-dark-900/95 backdrop-blur-xl border-b border-white/10 flex flex-col py-6 px-6 space-y-4 shadow-xl">
           {NAV_ITEMS.map((item) => (
             <a
               key={item.name}

@@ -40,13 +40,14 @@ export default function Education() {
     <section id="education" className="py-24 px-6 max-w-[1400px] mx-auto relative z-20">
       <div className="flex items-center gap-4 mb-16">
         <BookOpen className="text-amber-500" size={36} />
-        <h2 className="text-4xl font-bold font-mono text-white text-glow-amber tracking-widest uppercase">_EDUCATION</h2>
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-mono text-white text-glow-amber tracking-widest uppercase truncate w-full sm:overflow-visible">_EDUCATION</h2>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
         {/* Left Side: Spline 3D Scene */}
-        <div className="hidden lg:flex relative pointer-events-auto w-full items-center justify-center">
-          <div className="absolute inset-0 w-full h-full" style={{ transform: 'scale(0.95) translateX(8%)' }}>
+        <div className="flex relative pointer-events-auto w-full h-[280px] lg:h-auto items-center justify-center mb-4 lg:mb-0 rounded-2xl lg:rounded-none border border-white/10 lg:border-none bg-white/5 lg:bg-transparent overflow-hidden lg:overflow-visible shadow-lg lg:shadow-none">
+          {/* mix-blend-exclusion effectively inverts the bright background on mobile */}
+          <div className="absolute inset-0 w-full h-full mix-blend-exclusion lg:mix-blend-normal" style={{ transform: 'scale(0.95) translateX(8%)' }}>
             <SplineScene 
               scene="https://prod.spline.design/chKpx13TprStMwtB/scene.splinecode" 
               className="w-full h-full"
