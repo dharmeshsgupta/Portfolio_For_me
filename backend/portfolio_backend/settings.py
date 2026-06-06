@@ -125,3 +125,8 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 CORS_ALLOW_ALL_ORIGINS = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Required for PythonAnywhere admin panel login
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.pythonanywhere.com',
+]
