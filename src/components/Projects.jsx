@@ -42,11 +42,22 @@ export default function Projects() {
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
         
-        {/* Left Side: Quantum Attractor 3D Canvas */}
-        <div className="flex relative pointer-events-auto w-full h-[280px] lg:h-auto items-center justify-center mb-4 lg:mb-0 rounded-2xl lg:rounded-none border border-white/10 lg:border-none bg-black/20 lg:bg-transparent overflow-hidden lg:overflow-visible shadow-lg lg:shadow-none">
+        {/* Left Side: Quantum Attractor 3D Canvas (PC Only) */}
+        <div className="hidden lg:flex relative pointer-events-auto w-full lg:h-auto items-center justify-center mb-4 lg:mb-0 rounded-2xl lg:rounded-none border border-white/10 lg:border-none bg-black/20 lg:bg-transparent overflow-hidden lg:overflow-visible shadow-lg lg:shadow-none">
           <div className="absolute inset-0 w-full h-full" style={{ transform: 'scale(0.95) translateX(8%)' }}>
             <QuantumAttractor />
           </div>
+        </div>
+
+        {/* Mobile Lightweight Animation Fallback */}
+        <div className="flex lg:hidden w-full justify-center items-center py-8">
+          <motion.div 
+            animate={{ y: [0, -20, 0], scale: [1, 1.05, 1] }} 
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+            className="p-8 rounded-full bg-amber-500/5 border border-amber-500/20 shadow-[0_0_30px_rgba(255,176,0,0.1)]"
+          >
+            <Code size={64} className="text-amber-500" />
+          </motion.div>
         </div>
 
         {/* Right Side: Content */}

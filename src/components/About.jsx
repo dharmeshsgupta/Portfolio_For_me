@@ -68,15 +68,26 @@ export default function About() {
           </motion.div>
         </div>
 
-        {/* Right Side: Spline 3D Scene */}
-        <div className="flex relative pointer-events-auto w-full h-[280px] lg:h-auto items-center justify-center mt-4 lg:mt-0 rounded-2xl lg:rounded-none border border-white/10 lg:border-none bg-black/20 lg:bg-transparent overflow-hidden lg:overflow-visible shadow-lg lg:shadow-none">
+        {/* Right Side: Spline 3D Scene (PC Only) */}
+        <div className="hidden lg:flex relative pointer-events-auto w-full lg:h-auto items-center justify-center mt-4 lg:mt-0 rounded-2xl lg:rounded-none border border-white/10 lg:border-none bg-black/20 lg:bg-transparent overflow-hidden lg:overflow-visible shadow-lg lg:shadow-none">
           {/* Use transform to center the off-center camera and scale slightly to fit hands */}
           <div className="absolute inset-0 w-full h-full" style={{ transform: 'scale(0.95) translateX(8%)' }}>
             <SplineScene 
-              scene="https://prod.spline.design/EsAtmsAe6pcvQwoj/scene.splinecode" 
+              scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode" 
               className="w-full h-full"
             />
           </div>
+        </div>
+
+        {/* Mobile Lightweight Animation Fallback */}
+        <div className="flex lg:hidden w-full justify-center items-center py-8">
+          <motion.div 
+            animate={{ y: [0, -20, 0], rotate: [0, 5, -5, 0] }} 
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="p-8 rounded-full bg-cyber-teal/5 border border-cyber-teal/20 shadow-[0_0_30px_rgba(0,240,255,0.1)]"
+          >
+            <Code2 size={64} className="text-cyber-teal" />
+          </motion.div>
         </div>
 
       </div>

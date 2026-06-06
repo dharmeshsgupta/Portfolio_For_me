@@ -336,11 +336,22 @@ export default function Contact() {
           </motion.div>
         </div>
 
-        {/* Right Side: Quantum Transmission 3D Canvas */}
-        <div className="flex relative pointer-events-auto w-full h-[280px] lg:h-auto items-center justify-center mt-4 lg:mt-0 rounded-2xl lg:rounded-none border border-white/10 lg:border-none bg-black/20 lg:bg-transparent overflow-hidden lg:overflow-visible shadow-lg lg:shadow-none">
+        {/* Right Side: Quantum Transmission 3D Canvas (PC Only) */}
+        <div className="hidden lg:flex relative pointer-events-auto w-full lg:h-auto items-center justify-center mt-4 lg:mt-0 rounded-2xl lg:rounded-none border border-white/10 lg:border-none bg-black/20 lg:bg-transparent overflow-hidden lg:overflow-visible shadow-lg lg:shadow-none">
           <div className="absolute inset-0 w-full h-full">
             <QuantumTransmission />
           </div>
+        </div>
+
+        {/* Mobile Lightweight Animation Fallback */}
+        <div className="flex lg:hidden w-full justify-center items-center py-8">
+          <motion.div 
+            animate={{ y: [0, -20, 0], rotate: [0, -5, 5, 0] }} 
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="p-8 rounded-full bg-cyber-teal/5 border border-cyber-teal/20 shadow-[0_0_30px_rgba(0,240,255,0.1)]"
+          >
+            <Send size={64} className="text-cyber-teal" />
+          </motion.div>
         </div>
 
       </div>

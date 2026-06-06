@@ -44,15 +44,25 @@ export default function Education() {
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
-        {/* Left Side: Spline 3D Scene */}
-        <div className="flex relative pointer-events-auto w-full h-[280px] lg:h-auto items-center justify-center mb-4 lg:mb-0 rounded-2xl lg:rounded-none border border-white/10 lg:border-none bg-white/5 lg:bg-transparent overflow-hidden lg:overflow-visible shadow-lg lg:shadow-none">
-          {/* mix-blend-exclusion effectively inverts the bright background on mobile */}
+        {/* Left Side: Spline 3D Scene (PC Only) */}
+        <div className="hidden lg:flex relative pointer-events-auto w-full lg:h-auto items-center justify-center mb-4 lg:mb-0 rounded-2xl lg:rounded-none border border-white/10 lg:border-none bg-white/5 lg:bg-transparent overflow-hidden lg:overflow-visible shadow-lg lg:shadow-none">
           <div className="absolute inset-0 w-full h-full mix-blend-exclusion lg:mix-blend-normal" style={{ transform: 'scale(0.95) translateX(8%)' }}>
             <SplineScene 
               scene="https://prod.spline.design/chKpx13TprStMwtB/scene.splinecode" 
               className="w-full h-full"
             />
           </div>
+        </div>
+
+        {/* Mobile Lightweight Animation Fallback */}
+        <div className="flex lg:hidden w-full justify-center items-center py-8">
+          <motion.div 
+            animate={{ y: [0, -20, 0], rotate: [0, -5, 5, 0] }} 
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="p-8 rounded-full bg-cyber-teal/5 border border-cyber-teal/20 shadow-[0_0_30px_rgba(0,240,255,0.1)]"
+          >
+            <div className="text-cyber-teal text-6xl font-mono">{"{ }"}</div>
+          </motion.div>
         </div>
 
         {/* Right Side: Content */}
