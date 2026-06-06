@@ -7,7 +7,7 @@ export default function Projects() {
   const [activeVideo, setActiveVideo] = useState(null);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/projects/")
+    fetch("https://guptadharmesh.pythonanywhere.com/api/projects/")
       .then(res => res.json())
       .then(data => setProjects(data))
       .catch(err => console.error("Error fetching projects:", err));

@@ -7,7 +7,7 @@ export default function AllExperienceView() {
   const [experiences, setExperiences] = useState([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/experiences/")
+    fetch("https://guptadharmesh.pythonanywhere.com/api/experiences/")
       .then(res => res.json())
       .then(data => setExperiences(data))
       .catch(err => console.error("Error fetching experiences:", err));

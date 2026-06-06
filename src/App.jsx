@@ -15,7 +15,7 @@ function App() {
   const [stats, setStats] = useState({ linkedinFollowers: "12,300+", resume: null });
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/stats/")
+    fetch("https://guptadharmesh.pythonanywhere.com/api/stats/")
       .then((res) => res.json())
       .then((data) => {
         setStats({

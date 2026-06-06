@@ -23,7 +23,7 @@ export default function Contact() {
   const [responseMsg, setResponseMsg] = useState('');
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/stats/")
+    fetch("https://guptadharmesh.pythonanywhere.com/api/stats/")
       .then((res) => res.json())
       .then((data) => {
         if (data.linkedin_followers) {
@@ -57,7 +57,7 @@ export default function Contact() {
     setResponseMsg('');
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/contact/", {
+      const res = await fetch("https://guptadharmesh.pythonanywhere.com/api/contact/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
