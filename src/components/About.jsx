@@ -10,7 +10,7 @@ export default function About() {
     <section id="about" className="py-24 px-6 max-w-[1400px] mx-auto relative z-20">
       
       {/* Mobile Social Links */}
-      <div className="flex md:hidden items-center justify-center gap-6 mb-12 border border-white/10 p-4 rounded-xl glass-card bg-dark-800/50 shadow-lg noise-overlay">
+      <div className="sticky top-24 z-50 flex md:hidden items-center justify-center gap-6 mb-12 border border-white/10 p-4 rounded-xl glass-card bg-dark-900/80 backdrop-blur-xl shadow-lg noise-overlay">
         <a href="https://github.com/dharmeshsgupta" target="_blank" rel="noreferrer" className="text-white/70 hover:text-white transition-all">
           <Github size={24} />
         </a>

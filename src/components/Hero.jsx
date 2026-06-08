@@ -17,8 +17,8 @@ export default function Hero({ linkedinFollowers, resumeUrl }) {
 
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
-    const frameStep = isMobile ? 3 : 1; // Load fewer frames on mobile to prevent memory crash
-    const framesToLoad = Math.ceil(TOTAL_FRAMES / frameStep);
+    const frameStep = 1; // Load all frames for maximum smoothness
+    const framesToLoad = TOTAL_FRAMES;
     let loadedCount = 0;
     let handleResize = null;
 
@@ -49,19 +49,19 @@ export default function Hero({ linkedinFollowers, resumeUrl }) {
 
       const draw = (index) => {
         let frameToDraw = index + 1;
-        if (isMobile) {
-          frameToDraw = Math.floor(index / frameStep) * frameStep + 1;
-        }
         if (frameToDraw > TOTAL_FRAMES) {
-          frameToDraw = TOTAL_FRAMES - (TOTAL_FRAMES % frameStep) + 1;
+          frameToDraw = TOTAL_FRAMES;
         }
 
         const img = images.current[frameToDraw];
         if (!img || !img.complete) return;
+        
+        // Skip drawing if we are already on this frame (prevents redundant work)
+        if (currentFrame.current === index && index !== 0) return;
         currentFrame.current = index;
+        
         const cw = canvas.width;
         const ch = canvas.height;
-        ctx.clearRect(0, 0, cw, ch);
         
         // Cover-fit
         const sr = img.width / img.height;
@@ -78,6 +78,9 @@ export default function Hero({ linkedinFollowers, resumeUrl }) {
           dx = 0;
           dy = (ch - dh) / 2;
         }
+        
+        // No need to clearRect because the image always covers the entire canvas
+        // This improves rendering performance significantly
         ctx.drawImage(img, dx, dy, dw, dh);
       };
 
@@ -88,22 +91,23 @@ export default function Hero({ linkedinFollowers, resumeUrl }) {
         canvas.height = window.innerHeight * dpr;
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = isMobile ? 'low' : 'high';
-        draw(currentFrame.current);
+        // Force redraw on resize
+        currentFrame.current = -1;
+        draw(Math.max(0, Math.floor(obj.frame || 0)));
       };
+
+      const obj = { frame: 0 };
 
       handleResize();
       window.addEventListener('resize', handleResize);
-
-      const obj = { frame: 0 };
       
       ScrollTrigger.create({
         trigger: containerRef.current,
         start: 'top top',
         end: 'bottom bottom',
-        scrub: isMobile ? 0.5 : 1,
+        scrub: 0.8, // Increased scrub interpolates between mouse wheel jumps for a fluid, smooth transition
         animation: gsap.to(obj, {
           frame: TOTAL_FRAMES - 1,
-          snap: 'frame',
           ease: 'none',
           onUpdate: () => draw(Math.floor(obj.frame))
         })
@@ -141,7 +145,7 @@ export default function Hero({ linkedinFollowers, resumeUrl }) {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative h-[300vh] md:h-[400vh] w-full bg-dark-900 noise-overlay">
+    <div ref={containerRef} className="relative h-[500vh] md:h-[600vh] w-full bg-dark-900 noise-overlay">
       {/* Z-0: Fixed Canvas Background with CRT vignette */}
       <div className="sticky top-0 left-0 w-full h-screen overflow-hidden z-0 vignette">
         {loaded < 100 && (
