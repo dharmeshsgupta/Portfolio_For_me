@@ -43,11 +43,13 @@ export default function Projects() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
         
         {/* Left Side: Quantum Attractor 3D Canvas (PC Only) */}
-        <div className="hidden lg:flex relative pointer-events-auto w-full lg:h-auto items-center justify-center mb-4 lg:mb-0 rounded-2xl lg:rounded-none border border-white/10 lg:border-none bg-black/20 lg:bg-transparent overflow-hidden lg:overflow-visible shadow-lg lg:shadow-none">
-          <div className="absolute inset-0 w-full h-full" style={{ transform: 'scale(0.95) translateX(8%)' }}>
-            <QuantumAttractor />
+        {!isMobile && (
+          <div className="hidden lg:flex relative pointer-events-auto w-full lg:h-auto items-center justify-center mb-4 lg:mb-0 rounded-2xl lg:rounded-none border border-white/10 lg:border-none bg-black/20 lg:bg-transparent overflow-hidden lg:overflow-visible shadow-lg lg:shadow-none">
+            <div className="absolute inset-0 w-full h-full" style={{ transform: 'scale(0.95) translateX(8%)' }}>
+              <QuantumAttractor />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Mobile Lightweight Animation Fallback */}
         <div className="flex lg:hidden w-full justify-center items-center py-8">

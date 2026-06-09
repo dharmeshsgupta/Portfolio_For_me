@@ -16,9 +16,10 @@ export function QuantumTransmission() {
     let height = 0;
     let frameCount = 0;
 
+    const isMobile = window.innerWidth < 768;
     // Grid configuration
-    const COLS = 26;
-    const ROWS = 26;
+    const COLS = isMobile ? 12 : 26;
+    const ROWS = isMobile ? 12 : 26;
     const pulses = [];
 
     // Mouse interactive controls

@@ -17,8 +17,9 @@ export default function Hero({ linkedinFollowers, resumeUrl }) {
 
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
-    const frameStep = 1; // Load all frames for maximum smoothness
-    const framesToLoad = TOTAL_FRAMES;
+    // Load 75 frames on mobile (step 4), 150 frames on desktop (step 2)
+    const frameStep = isMobile ? 4 : 2;
+    const framesToLoad = Math.floor(TOTAL_FRAMES / frameStep);
     let loadedCount = 0;
     let handleResize = null;
 
@@ -53,7 +54,9 @@ export default function Hero({ linkedinFollowers, resumeUrl }) {
           frameToDraw = TOTAL_FRAMES;
         }
 
-        const img = images.current[frameToDraw];
+        // On mobile, we skip frames, so snap to the nearest loaded frame
+        const nearestLoaded = Math.floor((frameToDraw - 1) / frameStep) * frameStep + 1;
+        const img = images.current[nearestLoaded] || images.current[frameToDraw];
         if (!img || !img.complete) return;
         
         // Skip drawing if we are already on this frame (prevents redundant work)
@@ -101,6 +104,7 @@ export default function Hero({ linkedinFollowers, resumeUrl }) {
       handleResize();
       window.addEventListener('resize', handleResize);
       
+      let ticking = false;
       ScrollTrigger.create({
         trigger: containerRef.current,
         start: 'top top',
@@ -109,7 +113,15 @@ export default function Hero({ linkedinFollowers, resumeUrl }) {
         animation: gsap.to(obj, {
           frame: TOTAL_FRAMES - 1,
           ease: 'none',
-          onUpdate: () => draw(Math.floor(obj.frame))
+          onUpdate: () => {
+            if (!ticking) {
+              window.requestAnimationFrame(() => {
+                draw(Math.floor(obj.frame));
+                ticking = false;
+              });
+              ticking = true;
+            }
+          }
         })
       });
 
